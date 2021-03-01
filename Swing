@@ -1,0 +1,828 @@
+
+package part1TLS;
+
+import javax.swing.*;
+
+import java.awt.*;
+import java.io.IOException;
+
+import static java.lang.Float.parseFloat;
+
+public class Swing {
+    int res11=1;
+    private JLabel TravelerID , LN;
+    private JTextField TravelerIDTxt ,LNTxt;
+    private JComboBox  travelType1, payType1;
+    private JRadioButton create, delete, update, find, all, write;
+    private String path;
+    private int test = 0;
+
+    Swing(){
+        JTextField database;
+        JLabel currentPath;
+        JLabel dataPath;
+        JFrame frame = new JFrame("get start");
+        frame.setSize(300, 300);
+        frame.setLayout(null);
+        frame.setVisible(true);
+        currentPath = new JLabel("database");
+        currentPath.setBounds(10,200,250,20);
+        frame.add(currentPath);
+        dataPath = new JLabel("please enter the database path");
+        dataPath.setBounds(10,20,250,20);
+        frame.add(dataPath);
+        JButton start = new JButton("start");
+        start.setBounds(70,80,80,20);
+        frame.add(start);
+        database = new JTextField();
+        database.setBounds(10,40,250,20);
+        frame.add(database);
+        start.addActionListener(e -> {
+            prepareGUI();
+            path = database.getText();
+            String filename =path;
+            try {
+                TravProfDB.initializeDataBase(filename);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+            currentPath.setText("current database is "+path);
+        });
+
+    }
+
+    private void prepareGUI(){
+        JFrame mainFrame = new JFrame("Integrated Travel System ");
+        mainFrame.setSize(400,300);
+
+        mainFrame.setLayout(null);
+
+        JLabel lcreate = new JLabel("create profile");
+        lcreate.setBounds(100,10,150,20);
+        JLabel ldelete = new JLabel("delete profile");
+        ldelete.setBounds(100,30,150,20);
+        JLabel lupdate = new JLabel("update profile");
+        lupdate.setBounds(100,50,150,20);
+        JLabel lfind = new JLabel("find/display profile");
+        lfind.setBounds(80,70,150,20);
+        JLabel lall = new JLabel("display all profiles");
+        lall.setBounds(80,90,150,20);
+        JLabel lall1 = new JLabel("save to database");
+        lall1.setBounds(80,110,150,20);
+        //add label
+        mainFrame.add(lcreate);
+        mainFrame.add(ldelete);
+        mainFrame.add(lupdate);
+        mainFrame.add(lfind);
+        mainFrame.add(lall);
+        mainFrame.add(lall1);
+        //add button
+        create = new JRadioButton("select");
+        create.setBounds(250,10,80,20);
+        mainFrame.add(create);
+        delete = new JRadioButton("select");
+        delete.setBounds(250,30,80,20);
+        mainFrame.add(delete);
+        update = new JRadioButton("select");
+        update.setBounds(250,50,80,20);
+        mainFrame.add(update);
+        find = new JRadioButton("select");
+        find.setBounds(250,70,80,20);
+        mainFrame.add(find);
+        all = new JRadioButton("select");
+        all.setBounds(250,90,80,20);
+        mainFrame.add(all);
+        write = new JRadioButton("select");
+        write.setBounds(250,110,80,20);
+        mainFrame.add(write);
+
+        JButton select = new JButton("confirm");
+        select.setBounds(180,150,80,20);
+        mainFrame.add(select);
+        mainFrame.setVisible(true);
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        select.addActionListener(e -> {
+            if(create.isSelected()){
+                createProfile();
+            }
+            if(delete.isSelected()){
+                deleteProfile();
+            }
+            if(update.isSelected()){
+                updateProfile();
+            }
+            if(find.isSelected()){
+                findProfile();
+            }
+            if(all.isSelected()){
+                displayAllProfile();
+            }
+            if(write.isSelected()){
+                try {
+                    writeProfile();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public void writeProfile() throws IOException {
+        String filename =path;
+        TravProfDB.writeAllTravProf(filename);
+        JFrame deleteFrame1 = new JFrame("write profile");
+        deleteFrame1.setSize(270,100);
+        deleteFrame1.setVisible(true);
+        deleteFrame1.setLayout(new FlowLayout());
+
+        JLabel resD = new JLabel("complete");
+
+        deleteFrame1.add(resD);
+
+    }
+
+
+    public void createProfile(){
+        JLabel  FN, Address, Phone, tripCost, travelType, payType, mdc, mdPhone, alg, ill;
+        JButton confirmCreate;
+        JTextField TravelerIDTxt, FNTxt, LNTxt, AddressTxt, PhoneTxt,tripCost1, mdcTxt, mdPhoneTxt, algTxt, illTxt;
+        JFrame createFrame = new JFrame("create profile");
+        createFrame.setSize(400,350);
+        createFrame.setVisible(true);
+        createFrame.setLayout(null);
+
+        //id part
+        TravelerID = new JLabel("Traveler ID :");
+        TravelerID.setBounds(10,10,100,20);
+        createFrame.add(TravelerID);
+        TravelerIDTxt = new JTextField();
+        TravelerIDTxt.setBounds(110,10,250,20);
+        createFrame.add(TravelerIDTxt);
+
+        LN = new JLabel("Last Name :");
+        LN.setBounds(10,50,100,20);
+        createFrame.add(LN);
+        LNTxt = new JTextField();
+        LNTxt.setBounds(110,50,250,20);
+        createFrame.add(LNTxt);
+
+        FN = new JLabel("First Name :");
+        FN.setBounds(10,30,100,20);
+        createFrame.add(FN);
+        FNTxt = new JTextField();
+        FNTxt.setBounds(110,30,250,20);
+        createFrame.add(FNTxt);
+
+        Address = new JLabel("address :");
+        Address.setBounds(10,70,100,20);
+        createFrame.add(Address);
+        AddressTxt = new JTextField();
+        AddressTxt.setBounds(110,70,250,20);
+        createFrame.add(AddressTxt);
+
+        Phone = new JLabel("Phone :");
+        Phone.setBounds(10,90,100,20);
+        createFrame.add(Phone);
+        PhoneTxt = new JTextField();
+        PhoneTxt.setBounds(110,90,250,20);
+        createFrame.add(PhoneTxt);
+
+        tripCost = new JLabel("Trip Cost :");
+        tripCost.setBounds(10,110,100,20);
+        createFrame.add(tripCost);
+        tripCost1 = new JTextField();
+        tripCost1.setBounds(110,110,250,20);
+        createFrame.add(tripCost1);
+
+        travelType = new JLabel("Travel type :");
+        travelType.setBounds(10,130,100,20);
+        createFrame.add(travelType);
+        String[] list = {"business","holiday","family","solo"};
+        travelType1 = new JComboBox(list);
+        travelType1.setBounds(110,130,250,20);
+        createFrame.add(travelType1);
+
+        payType = new JLabel("payment type :");
+        payType.setBounds(10,150,100,20);
+        createFrame.add(payType);
+        String[] list1 = {"cash","debit","credit","apple pay"};
+        payType1 = new JComboBox(list1);
+        payType1.setBounds(110,150,250,20);
+        createFrame.add(payType1);
+
+        mdc = new JLabel("medical contact :");
+        mdc.setBounds(10,170,100,20);
+        createFrame.add(mdc);
+        mdcTxt = new JTextField();
+        mdcTxt.setBounds(110,170,250,20);
+        createFrame.add(mdcTxt);
+
+        mdPhone = new JLabel("contactor phone :");
+        mdPhone.setBounds(10,190,100,20);
+        createFrame.add(mdPhone);
+        mdPhoneTxt = new JTextField();
+        mdPhoneTxt.setBounds(110,190,250,20);
+        createFrame.add(mdPhoneTxt);
+
+        alg = new JLabel("allergy type :");
+        alg.setBounds(10,230,100,20);
+        createFrame.add(alg);
+        algTxt = new JTextField();
+        algTxt.setBounds(110,230,250,20);
+        createFrame.add(algTxt);
+
+        ill = new JLabel("illness type :");
+        ill.setBounds(10,210,100,20);
+        createFrame.add(ill);
+        illTxt = new JTextField();
+        illTxt.setBounds(110,210,250,20);
+        createFrame.add(illTxt);
+
+        confirmCreate= new JButton("confirm");
+        confirmCreate.setBounds(110,250,100,20);
+        createFrame.add(confirmCreate);
+
+        JLabel res = new JLabel("result");
+        res.setBounds(110,270,190,20);
+        createFrame.add(res);
+        confirmCreate.addActionListener(e -> {
+            String FNT, LNT, AddressT, PhoneT, mdcT, mdPhoneT, algT, illT;
+            String TravelerIDT = TravelerIDTxt.getText();
+            AddressT = AddressTxt.getText();
+            FNT = FNTxt.getText();
+            LNT = LNTxt.getText();
+            PhoneT = PhoneTxt.getText();
+            float tripCostT = parseFloat(tripCost1.getText());
+            String travelTypeT = String.valueOf(travelType1.getSelectedItem());
+            String payTypeT = String.valueOf(payType1.getSelectedItem());
+            mdcT = mdcTxt.getText();
+            mdPhoneT = mdPhoneTxt.getText();
+            algT = algTxt.getText();
+            illT = illTxt.getText();
+            MedCond medCondInfo = new MedCond(mdcT, mdPhoneT, algT, illT);
+            TravProf profile = new TravProf(TravelerIDT, FNT, LNT, AddressT, PhoneT, tripCostT, travelTypeT, payTypeT, medCondInfo);
+            TravProfDB.insertNewProfile(profile);
+            res.setText("create success");
+        });
+    }
+
+    public void deleteProfile(){
+        TravProfDB.display();
+        JFrame deleteFrame = new JFrame("delete profile");
+        deleteFrame.setSize(400,300);
+        deleteFrame.setVisible(true);
+        deleteFrame.setLayout(null);
+
+        TravelerID = new JLabel("Traveler ID :");
+        TravelerID.setBounds(10,10,100,20);
+        deleteFrame.add(TravelerID);
+        JTextField TravelerIDTxt1 = new JTextField();
+        TravelerIDTxt1.setBounds(110,10,250,20);
+        deleteFrame.add(TravelerIDTxt1);
+
+        LN = new JLabel("Last Name :");
+        LN.setBounds(10,50,100,20);
+        deleteFrame.add(LN);
+
+        JTextField LNTxt1 = new JTextField();
+        LNTxt1.setBounds(110,50,250,20);
+        deleteFrame.add(LNTxt1);
+
+        JButton confirmDelete= new JButton("confirm");
+        confirmDelete.setBounds(110,200,100,20);
+        deleteFrame.add(confirmDelete);
+
+
+        confirmDelete.addActionListener(e -> {
+            String TravelerIDT = TravelerIDTxt1.getText();
+            String LNT = LNTxt1.getText();
+            JFrame deleteFrame1 = new JFrame("delete profile");
+            deleteFrame1.setSize(270,100);
+            deleteFrame1.setLayout(new FlowLayout());
+            boolean res;
+            res = TravProfDB.deletProfile(TravelerIDT, LNT);
+            JLabel resD;
+            if(res) {
+                resD = new JLabel("complete");
+            }
+            else {
+                resD = new JLabel("please enter valid ID and Last Name");
+            }
+            deleteFrame1.add(resD);
+            deleteFrame1.setVisible(true);
+            TravProfDB.display();
+        });
+    }
+
+    public void updateProfile(){
+        JFrame updateFrame = new JFrame("update profile");
+        updateFrame.setSize(400,300);
+        updateFrame.setVisible(true);
+        updateFrame.setLayout(null);
+
+        TravelerID = new JLabel("Traveler ID :");
+        TravelerID.setBounds(10,10,100,20);
+        updateFrame.add(TravelerID);
+        TravelerIDTxt = new JTextField();
+        TravelerIDTxt.setBounds(110,10,250,20);
+        updateFrame.add(TravelerIDTxt);
+
+        LN = new JLabel("Last Name :");
+        LN.setBounds(10,50,100,20);
+        updateFrame.add(LN);
+
+        LNTxt = new JTextField();
+        LNTxt.setBounds(110,50,250,20);
+        updateFrame.add(LNTxt);
+
+        String[] list = {"TravelerID", "first name", "last name", "Address", "Phone", "tripCost", "travelType", "payType","medContact", "mdPhone", "allergy type", "ill type"};
+        JComboBox Type1 = new JComboBox(list);
+        Type1.setBounds(110,90,250,20);
+        updateFrame.add(Type1);
+
+        JButton confirmUpdate= new JButton("confirm");
+        confirmUpdate.setBounds(110,200,100,20);
+        updateFrame.add(confirmUpdate);
+
+
+
+        confirmUpdate.addActionListener(e -> {
+            JFrame updateFrame1 = new JFrame("update profile");
+            updateFrame1.setSize(400,400);
+            updateFrame1.setLayout(null);
+            updateFrame1.setVisible(true);
+            String TravelerIDT = TravelerIDTxt.getText();
+            String LNT = LNTxt.getText();
+            //choice here
+            int Choice = Type1.getSelectedIndex();
+            TravProf profile = TravProfDB.findProfile(TravelerIDT,LNT);
+
+            if(profile!= null){
+
+            MedCond MEDcond = profile.getMedcondinfo();
+
+            updateFrame1.add(TravelerID);
+
+            JLabel TravelerIDTxt1 = new JLabel(TravelerIDT);
+            TravelerIDTxt1.setBounds(110,10,250,20);
+            updateFrame1.add(TravelerIDTxt1);
+
+            updateFrame1.add(LN);
+
+            JLabel LNTxt1 = new JLabel(LNT);
+            LNTxt1.setBounds(110,50,250,20);
+            updateFrame1.add(LNTxt1);
+
+            JLabel updateLabel = new JLabel();
+            updateLabel.setBounds(10,90,350,20);
+            updateFrame1.add(updateLabel);
+
+            JComboBox payType2;
+            String[] list1 = {"cash","debit","credit","apple pay"};
+            payType2 = new JComboBox(list1);
+            JComboBox travelType2;
+            String[] list2 = {"business","holiday","family","solo"};
+            travelType2 = new JComboBox(list2);
+
+            JTextField updateLabel1 = new JTextField();
+            updateLabel1.setBounds(10,110,250,20);
+            updateFrame1.add(updateLabel1);
+
+            JButton confirmUpdate1= new JButton("confirm");
+            confirmUpdate1.setBounds(110,200,100,20);
+            updateFrame1.add(confirmUpdate1);
+
+
+            JLabel resUp = new JLabel("result");
+            resUp.setBounds(110,220,250,20);
+            updateFrame1.add(resUp);
+
+            switch(Choice) {
+                case 0:
+                    updateLabel.setText("Enter new TravelID");
+                    break;
+                case 1:
+                    updateLabel.setText("Enter new FirstName");
+
+                    break;
+                case 2:
+                    updateLabel.setText("Enter new Last name");
+
+                    break;
+                case 3:
+                    updateLabel.setText("Enter new Address");
+
+                    break;
+                case 4:
+                    updateLabel.setText("Enter new Phone number");
+
+                    break;
+                case 5:
+                    updateLabel.setText("Enter new TripCost");
+
+                    break;
+                case 6:
+                    updateLabel.setText("Enter new travel type");
+                    updateFrame1.remove(updateLabel1);
+                    travelType2.setBounds(10,110,250,20);
+                    updateFrame1.add(travelType2);
+                    break;
+                case 7:
+                    updateLabel.setText("Enter new payment type");
+                    updateFrame1.remove(updateLabel1);
+                    payType2.setBounds(10,110,250,20);
+                    updateFrame1.add(payType2);
+                    break;
+                case 8:
+                    updateLabel.setText("Enter name of the traveler's physician");
+
+                    break;
+                case 9:
+                    updateLabel.setText("Enter the phone number of physician:");
+
+                    break;
+                case 10:
+                    updateLabel.setText("Please enter the allergy type");
+
+                    break;
+                case 11:
+                    updateLabel.setText("Please enter the illness type:");
+
+                    break;
+            }
+
+
+            confirmUpdate1.addActionListener(f -> {
+                switch(Choice) {
+                    case 0:
+                        String str = updateLabel1.getText();
+                        profile.updateTravelID(str);
+                        resUp.setText("complete");
+                        break;
+                    case 1:
+                        String str1 = updateLabel1.getText();
+                        profile.updateFirstName(str1);
+                        resUp.setText("complete");
+                        break;
+                    case 2:
+                        String str2 = updateLabel1.getText();
+                        updateLabel.setText("Enter new Last name");
+                        profile.updateLastName(str2);
+                        resUp.setText("complete");
+                        break;
+                    case 3:
+                        String str3 = updateLabel1.getText();
+                        updateLabel.setText("Enter new Address");
+                        profile.updateAddress(str3);
+                        resUp.setText("complete");
+                        break;
+                    case 4:
+                        String str4 = updateLabel1.getText();
+                        updateLabel.setText("Enter new Phone number");
+                        profile.updatePhone(str4);
+                        resUp.setText("complete");
+                        break;
+                    case 5:
+                        String str5 = updateLabel1.getText();
+                        updateLabel.setText("Enter new TripCost");
+                        try {
+                            profile.updateTripCost(Float.parseFloat(str5));
+                        } catch (NumberFormatException a) {
+                            resUp.setText("Please enter a valid number");
+                        }
+                        resUp.setText("complete");
+                        break;
+                    case 6:
+
+                        String travelTypeT = String.valueOf(travelType2.getSelectedItem());
+                        profile.updateTravelType(travelTypeT);
+                        resUp.setText("complete");
+                        break;
+                    case 7:
+                        String pay = String.valueOf(payType2.getSelectedItem());
+                        profile.updatePaymentType(pay);
+                        resUp.setText("complete");
+                        break;
+                    case 8:
+                        String str8 = updateLabel1.getText();
+                        updateLabel.setText("Enter name of the traveler's physician");
+                        MEDcond.updateMdContact(str8);
+                        resUp.setText("complete");
+                        break;
+                    case 9:
+                        String str9 = updateLabel1.getText();
+                        updateLabel.setText("Enter the phone number of physician:");
+                        MEDcond.updateMdPhone(str9);
+                        resUp.setText("complete");
+                        break;
+                    case 10:
+                        String str10 = updateLabel1.getText();
+                        updateLabel.setText("Please enter the allergy type");
+                        MEDcond.updateAlgType(str10);
+                        resUp.setText("complete");
+                        break;
+                    case 11:
+                        String str11 = updateLabel1.getText();
+                        updateLabel.setText("Please enter the illness type:");
+                        MEDcond.updateIllType(str11);
+                        resUp.setText("complete");
+                        break;
+                }
+                profile.updateMedcondinfo(MEDcond);
+            });}
+            else {
+                updateFrame1.setSize(300,250);
+                updateFrame1.setLayout(new FlowLayout());
+                JLabel res = new JLabel("Profile not found. please input valid ID and name");
+                updateFrame1.add(res);
+            }
+
+        });
+
+    }
+
+    public void findProfile(){
+        JFrame findFrame = new JFrame("find profile");
+        findFrame.setSize(400,300);
+        findFrame.setVisible(true);
+        findFrame.setLayout(null);
+
+        TravelerID.setBounds(10,10,100,20);
+        findFrame.add(TravelerID);
+
+        TravelerIDTxt = new JTextField();
+        TravelerIDTxt.setBounds(110,10,250,20);
+        findFrame.add(TravelerIDTxt);
+
+
+        LN.setBounds(10,50,100,20);
+        findFrame.add(LN);
+
+        LNTxt = new JTextField();
+        LNTxt.setBounds(110,50,250,20);
+        findFrame.add(LNTxt);
+
+        JButton confirmFind= new JButton("confirm");
+        confirmFind.setBounds(110,200,100,20);
+        findFrame.add(confirmFind);
+
+
+
+        confirmFind.addActionListener(e -> {
+            String TravelerIDT = TravelerIDTxt.getText();
+            String LNT = LNTxt.getText();
+            TravProf profile = TravProfDB.findProfile(TravelerIDT,LNT);
+
+            JFrame find1 = new JFrame("find profile result");
+            find1.setSize(400,350);
+            find1.setVisible(true);
+            find1.setLayout(null);
+
+            if(TravProfDB.findProfile(TravelerIDT,LNT)!= null){
+            MedCond MEDcond = profile.getMedcondinfo();
+
+            JLabel  FN, Address, Phone, tripCost, travelType, payType, mdc, mdPhone, alg, ill;
+            JLabel TravelerIDTxt, FNTxt, LNTxt, AddressTxt, PhoneTxt,tripCost1, mdcTxt, mdPhoneTxt, algTxt, illTxt,travelTypeT, payTypeT;
+
+            //id part
+            TravelerID = new JLabel("Traveler ID :");
+            TravelerID.setBounds(10,10,100,20);
+            find1.add(TravelerID);
+            TravelerIDTxt = new JLabel(profile.getTravelID());
+            TravelerIDTxt.setBounds(110,10,250,20);
+            find1.add(TravelerIDTxt);
+
+            LN = new JLabel("Last Name :");
+            LN.setBounds(10,50,100,20);
+            find1.add(LN);
+            LNTxt = new JLabel(profile.getLastName());
+            LNTxt.setBounds(110,50,250,20);
+            find1.add(LNTxt);
+
+            FN = new JLabel("First Name :");
+            FN.setBounds(10,30,100,20);
+            find1.add(FN);
+            FNTxt = new JLabel(profile.getFirstName());
+            FNTxt.setBounds(110,30,250,20);
+            find1.add(FNTxt);
+
+            Address = new JLabel("address :");
+            Address.setBounds(10,70,100,20);
+            find1.add(Address);
+            AddressTxt = new JLabel(profile.getAddress());
+            AddressTxt.setBounds(110,70,250,20);
+            find1.add(AddressTxt);
+
+            Phone = new JLabel("Phone :");
+            Phone.setBounds(10,90,100,20);
+            find1.add(Phone);
+            PhoneTxt = new JLabel(profile.getPhone());
+            PhoneTxt.setBounds(110,90,250,20);
+            find1.add(PhoneTxt);
+
+            tripCost = new JLabel("Trip Cost :");
+            tripCost.setBounds(10,110,100,20);
+            find1.add(tripCost);
+            tripCost1 = new JLabel(String.valueOf(profile.getTripCost()));
+            tripCost1.setBounds(110,110,250,20);
+            find1.add(tripCost1);
+
+            travelType = new JLabel("Travel type :");
+            travelType.setBounds(10,130,100,20);
+            find1.add(travelType);
+            travelTypeT = new JLabel(profile.getTravelType());
+            travelTypeT.setBounds(110,130,250,20);
+            find1.add(travelTypeT);
+
+            payType = new JLabel("payment type :");
+            payType.setBounds(10,150,100,20);
+            find1.add(payType);
+            payTypeT = new JLabel(profile.getPaymentType());
+            payTypeT.setBounds(110,150,250,20);
+            find1.add(payTypeT);
+
+            mdc = new JLabel("medical contact :");
+            mdc.setBounds(10,170,100,20);
+            find1.add(mdc);
+            mdcTxt = new JLabel(MEDcond.getMdContact());
+            mdcTxt.setBounds(110,170,250,20);
+            find1.add(mdcTxt);
+
+            mdPhone = new JLabel("contactor phone :");
+            mdPhone.setBounds(10,190,100,20);
+            find1.add(mdPhone);
+            mdPhoneTxt = new JLabel(MEDcond.getMdPhone());
+            mdPhoneTxt.setBounds(110,190,250,20);
+            find1.add(mdPhoneTxt);
+
+            alg = new JLabel("allergy type :");
+            alg.setBounds(10,230,100,20);
+            find1.add(alg);
+            algTxt = new JLabel(MEDcond.getAlgType());
+            algTxt.setBounds(110,230,250,20);
+            find1.add(algTxt);
+
+            ill = new JLabel("illness type :");
+            ill.setBounds(10,210,100,20);
+            find1.add(ill);
+            illTxt = new JLabel(MEDcond.getIllType());
+            illTxt.setBounds(110,210,250,20);
+            find1.add(illTxt);}
+            else{
+                find1.setSize(200,100);
+                find1.setLayout(new FlowLayout());
+                JLabel res = new JLabel("Profile not found. please input valid ID and name");
+                find1.add(res);
+            }
+
+        });
+    }
+
+    public void displayAllProfile(){
+        /*JFrame allFrame = new JFrame("display all profile");
+        allFrame.setSize(400,300);
+        allFrame.setVisible(true);
+        allFrame.setLayout(null);
+
+
+        JButton confirmFind= new JButton("confirm");
+        confirmFind.setBounds(110,200,100,20);
+        allFrame.add(confirmFind);
+
+        confirmFind.addActionListener(e -> {*/
+        TravProf profile = TravProfDB.findCurrentProfile();
+
+
+        if(res11 ==0 )
+        {
+            JFrame updateFrame1 = new JFrame("display profile");
+            updateFrame1.setSize(400,100);
+            updateFrame1.setLayout(new FlowLayout());
+            updateFrame1.setVisible(true);
+            JLabel res = new JLabel("No More Profile ");
+            updateFrame1.add(res);
+            TravProfDB.reset();
+            res11 =1;
+
+        }
+        /*else if (test !=0){
+            JFrame find1 = new JFrame("display profile result");
+            find1.setSize(400,350);
+            find1.setVisible(true);
+            find1.setLayout(null);
+            displayNext(find1);
+        }*/
+        else{
+            MedCond MEDcond = profile.getMedcondinfo();
+            JLabel  FN, Address, Phone, tripCost, travelType, payType, mdc, mdPhone, alg, ill;
+            JLabel TravelerIDTxt, FNTxt, LNTxt, AddressTxt, PhoneTxt,tripCost1, mdcTxt, mdPhoneTxt, algTxt, illTxt,travelTypeT, payTypeT;
+            JFrame find1 = new JFrame("display profile result");
+            find1.setSize(400,350);
+            find1.setVisible(true);
+            find1.setLayout(null);
+
+            //id part
+            TravelerID = new JLabel("Traveler ID :");
+            TravelerID.setBounds(10,10,100,20);
+            find1.add(TravelerID);
+            TravelerIDTxt = new JLabel(profile.getTravelID());
+            TravelerIDTxt.setBounds(110,10,250,20);
+            find1.add(TravelerIDTxt);
+
+            LN = new JLabel("Last Name :");
+            LN.setBounds(10,50,100,20);
+            find1.add(LN);
+            LNTxt = new JLabel(profile.getLastName());
+            LNTxt.setBounds(110,50,250,20);
+            find1.add(LNTxt);
+
+            FN = new JLabel("First Name :");
+            FN.setBounds(10,30,100,20);
+            find1.add(FN);
+            FNTxt = new JLabel(profile.getFirstName());
+            FNTxt.setBounds(110,30,250,20);
+            find1.add(FNTxt);
+
+            Address = new JLabel("address :");
+            Address.setBounds(10,70,100,20);
+            find1.add(Address);
+            AddressTxt = new JLabel(profile.getAddress());
+            AddressTxt.setBounds(110,70,250,20);
+            find1.add(AddressTxt);
+
+            Phone = new JLabel("Phone :");
+            Phone.setBounds(10,90,100,20);
+            find1.add(Phone);
+            PhoneTxt = new JLabel(profile.getPhone());
+            PhoneTxt.setBounds(110,90,250,20);
+            find1.add(PhoneTxt);
+
+            tripCost = new JLabel("Trip Cost :");
+            tripCost.setBounds(10,110,100,20);
+            find1.add(tripCost);
+            tripCost1 = new JLabel(String.valueOf(profile.getTripCost()));
+            tripCost1.setBounds(110,110,250,20);
+            find1.add(tripCost1);
+
+            travelType = new JLabel("Travel type :");
+            travelType.setBounds(10,130,100,20);
+            find1.add(travelType);
+            travelTypeT = new JLabel(profile.getTravelType());
+            travelTypeT.setBounds(110,130,250,20);
+            find1.add(travelTypeT);
+
+            payType = new JLabel("payment type :");
+            payType.setBounds(10,150,100,20);
+            find1.add(payType);
+            payTypeT = new JLabel(profile.getPaymentType());
+            payTypeT.setBounds(110,150,250,20);
+            find1.add(payTypeT);
+
+            mdc = new JLabel("medical contact :");
+            mdc.setBounds(10,170,100,20);
+            find1.add(mdc);
+            mdcTxt = new JLabel(MEDcond.getMdContact());
+            mdcTxt.setBounds(110,170,250,20);
+            find1.add(mdcTxt);
+
+            mdPhone = new JLabel("contactor phone :");
+            mdPhone.setBounds(10,190,100,20);
+            find1.add(mdPhone);
+            mdPhoneTxt = new JLabel(MEDcond.getMdPhone());
+            mdPhoneTxt.setBounds(110,190,250,20);
+            find1.add(mdPhoneTxt);
+
+            alg = new JLabel("allergy type :");
+            alg.setBounds(10,230,100,20);
+            find1.add(alg);
+            algTxt = new JLabel(MEDcond.getAlgType());
+            algTxt.setBounds(110,230,250,20);
+            find1.add(algTxt);
+
+            ill = new JLabel("illness type :");
+            ill.setBounds(10,210,100,20);
+            find1.add(ill);
+            illTxt = new JLabel(MEDcond.getIllType());
+            illTxt.setBounds(110,210,250,20);
+            find1.add(illTxt);
+
+            JButton confirmCreate= new JButton("Next");
+            confirmCreate.setBounds(110,250,100,20);
+            find1.add(confirmCreate);
+
+            confirmCreate.addActionListener(g -> {
+                test = 1;
+                find1.setVisible(false);
+                
+                res11=TravProfDB.forward();
+
+                displayAllProfile();
+            });
+            }
+        //});
+    }
+
+    public static void main(String[] args) {
+        new Swing();
+    }
+}
