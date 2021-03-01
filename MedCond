@@ -1,0 +1,50 @@
+package part1TLS;
+public class MedCond{
+    private String mdContact;
+    private String mdPhone;
+    private String algType;
+    private String illType;
+
+    public MedCond(String mdContact,String mdPhone,String algType,String illType){
+        this.algType = algType;
+        this.illType =illType;
+        this.mdContact = mdContact;
+        this.mdPhone=mdPhone;
+    }
+
+    public String getAlgType() {
+        return algType;
+    }
+
+    public String getIllType() {
+        return illType;
+    }
+
+    public String getMdContact() {
+        return mdContact;
+    }
+
+    public String getMdPhone() {
+        return mdPhone;
+    }
+
+    public void updateAlgType(String algType) {
+        this.algType = algType;
+    }
+
+    public void updateIllType(String illType) {
+        this.illType = illType;
+    }
+
+    public void updateMdContact(String mdContact) {
+        this.mdContact = mdContact;
+    }
+
+    public void updateMdPhone(String mdPhone) {
+        this.mdPhone = mdPhone;
+    }
+
+    public String printAll(){
+        return mdContact+" "+mdPhone+" "+algType+" "+illType;
+    }
+}
