@@ -1,0 +1,270 @@
+package part1TLS;
+
+import java.io.IOException;
+import java.util.Scanner;
+
+public class TravProfInterface {
+    Scanner in = new Scanner (System.in);
+    private String path;
+
+    public TravProfInterface(String path){
+        this.path = path;
+    }
+
+    public void getUserChoice() throws IOException {
+        System.out.println("which kind of services do you want to use?");
+        System.out.println("1:DeleteTravProf");
+        System.out.println("2:findTravprof");
+        System.out.println("3:updateTravProf");
+        System.out.println("5:displayAllTravProf");
+        System.out.println("6:writeToDB");
+        System.out.println("7:initDB");
+        System.out.println("8:createNewTravProf");
+        System.out.println("9:createNewMedCont");
+        System.out.println("0:exit");
+        System.out.println("please input the service you want to use");
+        String choice = in.nextLine();
+        choice = choice.trim();
+
+        switch (choice) {
+            case "1":
+                deleteTravProf();
+                break;
+            case "2":
+                findTravProf();
+                break;
+            case "3":
+                updateTravProf();
+                break;
+            case "5":
+                displayAllTravProv();
+                break;
+            case "6":
+                writeToDB();
+                break;
+            case "7":
+                initDB();
+                break;
+            case "8":
+                createNewTravProf();
+                break;
+            case "9":
+                createNewMedCond();
+
+            case"0":
+                System.exit(1);
+        }
+    }
+
+    public void deleteTravProf(){
+        System.out.println("Enter the travel agent ID.");
+        String travAgentID = in.nextLine();
+        System.out.println("Enter the last name of the traveler");
+        String lastName = in.nextLine();
+        if(TravProfDB.deletProfile(travAgentID,lastName))
+        {
+            System.out.println("delete complete");
+        }
+        else
+        {
+            System.out.println("please enter valid ID and Last Name");
+
+        }
+    }
+
+
+    public void findTravProf(){
+        System.out.println("Enter the travel agent ID.");
+        String travAgentID = in.nextLine();
+        System.out.println("Enter the last name of the traveler");
+        String lastName = in.nextLine();
+        TravProf profile;
+        if(TravProfDB.findProfile(travAgentID,lastName) != null) {
+            profile = TravProfDB.findProfile(travAgentID, lastName);
+            assert profile != null;
+            this.displayTravProf(profile);
+            System.out.print("\n");
+        }
+        else
+        {
+            System.out.println("Profile not found. please input valid ID and name");
+        }
+    }
+
+    public void updateTravProf(){
+        System.out.println("Enter the travel agent ID.");
+        String travAgentID = in.nextLine();
+        System.out.println("Enter the last name of the traveler");
+        String lastName = in.nextLine();
+        TravProf profile = TravProfDB.findProfile(travAgentID,lastName);
+
+        // give the user all of the options available
+        System.out.println("Please select the item you want to modify");
+        System.out.println("1: Travel ID");
+        System.out.println("2: FirstName");
+        System.out.println("3: LastName");
+        System.out.println("4: address");
+        System.out.println("5: phone");
+        System.out.println("6: tripCost");
+        System.out.println("7: travelType");
+        System.out.println("8: paymentType");
+        System.out.println("9: Medcond");
+
+        //get users choice
+
+        String Choice = in.nextLine();
+        Choice = Choice.trim();
+
+        assert profile != null;
+        switch(Choice){
+            case "1":
+                System.out.println("Enter new TravelID");
+
+                profile.updateTravelID(in.nextLine().trim());
+                break;
+            case "2":
+                System.out.println("Enter new FirstName");
+                profile.updateFirstName(in.nextLine().trim());
+                break;
+            case "3":
+                System.out.println("Enter new Last name");
+                profile.updateLastName(in.nextLine().trim());
+                break;
+            case "4":
+                System.out.println("Enter new Address");
+                profile.updateAddress(in.nextLine().trim());
+                break;
+            case "5":
+                System.out.println("Enter new Phone number");
+                profile.updatePhone(in.nextLine());
+                break;
+            case "6":
+                System.out.println("Enter new TripCost");
+                try {
+                    profile.updateTripCost(Float.parseFloat(in.nextLine()));
+                }catch(NumberFormatException e){
+                    System.out.println("Please enter a valid decimal number");
+                }
+                break;
+            case "7":
+                System.out.println("Enter new travel type");
+                profile.updateTravelType(in.nextLine());
+                break;
+            case "8":
+                System.out.println("Enter new travel payment type");
+                profile.updatePaymentType(in.nextLine());
+                break;
+            case "9":
+                System.out.println("Please enter name of the traveler's physician");
+                String mdContact = in.nextLine();
+                System.out.println("Please enter the phone number of physician:");
+                String mdPhone = in.nextLine();
+                System.out.println("Please enter the allergy type");
+                String algType = in.nextLine();
+                System.out.println("Please enter the illness type:");
+                String illType = in.nextLine();
+                MedCond MEDcond = new MedCond(mdContact,mdPhone,algType,illType);
+                profile.updateMedcondinfo(MEDcond);
+                break;
+
+            default:
+                System.out.println("please enter a valid selection from 1 to 9");
+        }
+    }
+
+    public void displayTravProf(TravProf profile){
+        // this will print all values in profile.
+        System.out.println("Travel ID is:" + profile.getTravelID());
+        System.out.println("First Name is:" + profile.getFirstName());
+        System.out.println("Last Name is:" + profile.getLastName());
+        System.out.println("Address is:" + profile.getAddress());
+        System.out.println("Phone number is:" + profile.getPhone());
+        System.out.println("Trip cost is:" + profile.getTripCost());
+        System.out.println("Travel Type is:" + profile.getTravelType());
+        System.out.println("Payment Type is:" + profile.getPaymentType());
+        System.out.println("Physician's name is:" + profile.getMedcondinfo().getMdContact());
+        System.out.println("Physician's phone is:" + profile.getMedcondinfo().getMdPhone());
+        System.out.println("Physician's name is:" + profile.getMedcondinfo().getAlgType());
+        System.out.println("Physician's name is:" + profile.getMedcondinfo().getIllType());
+    }
+
+    public void displayAllTravProv() {
+        TravProf iniPro = TravProfDB.findFirstProfile();
+        if(iniPro == null)
+        {
+            System.out.println("database is empty");
+            return;
+        }
+        //assume there is at least one travel profile in the database//
+        this.displayTravProf(TravProfDB.findFirstProfile());
+        //assume that return null once gone through all of the profiles
+        TravProf curProf = TravProfDB.findNextProfile();
+        while(curProf != null){
+            System.out.println();
+            this.displayTravProf(curProf);
+            curProf =TravProfDB.findNextProfile();
+        }
+    }
+
+    public void writeToDB() throws IOException {
+        String filename =path;
+        TravProfDB.writeAllTravProf(filename);
+        System.out.println("write to database name is:" + path);
+    }
+
+    public void initDB() throws IOException{
+        String filename =path;
+        TravProfDB.initializeDataBase(filename);
+        System.out.println("read the content of file to database, File name is:" + path);
+    }
+
+    public void createNewTravProf(){
+        System.out.println("Please enter the travel agent ID");
+        String travAgentID = in.nextLine();
+        System.out.println("Please enter the First Name");
+        String firstName = in.nextLine();
+        System.out.println("Please enter the last Name:");
+        String lastName = in.nextLine();
+        System.out.println("Please enter the address");
+        String address = in.nextLine();
+        System.out.println("Please enter the phone number");
+        String phone = in.nextLine();
+        float tripCost;
+        System.out.println("please enter a valid decimal number of the cost");
+        tripCost = Float.parseFloat(in.nextLine());
+        System.out.println("enter the travel type");
+        String travelType = in.nextLine();
+        System.out.println("enter the payment type");
+        String paymentType = in.nextLine();
+        MedCond medCondInfo = createNewMedCond();
+
+        TravProf profile = new TravProf(travAgentID, firstName, lastName, address, phone, tripCost, travelType, paymentType, medCondInfo);
+        TravProfDB.insertNewProfile(profile);
+        System.out.println("create success\n");
+    }
+
+    public MedCond createNewMedCond(){
+        System.out.println("Please enter name of the traveler's physician");
+        String mdContact = in.nextLine();
+        System.out.println("Please enter the number of physician:");
+        String mdPhone = in.nextLine();
+        System.out.println("Please enter the allergy type");
+        String algType = in.nextLine();
+        System.out.println("Please enter the illness type:");
+        String illType = in.nextLine();
+
+        return new MedCond(mdContact, mdPhone, algType, illType);
+    }
+
+    public static void main(String[] args) throws IOException {
+        System.out.println("Please enter your travel data");
+        Scanner user_ID = new Scanner (System.in);
+
+        TravProfInterface client = new TravProfInterface(user_ID.nextLine());
+
+        while(true){
+            client.getUserChoice();
+        }
+
+    }
+}
